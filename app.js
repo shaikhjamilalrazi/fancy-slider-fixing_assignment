@@ -127,6 +127,7 @@ const changeItem = (index) => {
 const changeSlide = (index) => {
   const items = document.querySelectorAll(".slider-item");
   const activeDot = document.querySelectorAll(".dot");
+
   if (index < 0) {
     slideIndex = items.length - 1;
     index = slideIndex;
@@ -155,7 +156,9 @@ const changeSlide = (index) => {
     item.classList = "dot";
   });
 
+  // displaying current image
   items[index].style.display = "block";
+  // showing active dots
   activeDot[index].classList.add("dot_active");
 };
 
