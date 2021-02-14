@@ -8,32 +8,36 @@ const sliderContainer = document.getElementById("sliders");
 const durationField = document.getElementById("duration"); // added
 const search = document.getElementById("search");
 
+const dot = document.querySelector(".dots");
 // selected image
 let sliders = [];
 
-// If this key doesn't work
-// Find the name in the url and go to their website
-// to create your own api key
 const KEY = "15674931-a9d714b6e9d654524df198e00&q";
 
 // show images
 const showImages = (images) => {
-  imagesArea.style.display = "block";
-  gallery.innerHTML = "";
-  // show gallery title
-  galleryHeader.style.display = "flex";
-  images.forEach((image) => {
-    let div = document.createElement("div");
-    div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-2";
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div);
-  });
+  if (images.length !== 0) {
+    imagesArea.style.display = "block";
+    gallery.innerHTML = "";
+    // show gallery title
+    galleryHeader.style.display = "flex";
+    images.forEach((image) => {
+      let div = document.createElement("div");
+      div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-2";
+      div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+      gallery.appendChild(div);
+    });
+  } else {
+    imagesArea.style.display = "block";
+    document.getElementById("selector").style.display = "none";
+    gallery.innerHTML = '<span class="noData">😒 No data Found</span>';
+  }
+
   toggleSpinner();
 };
 
 const getImages = (query) => {
   toggleSpinner();
-
   fetch(
     `https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`
   )
@@ -55,7 +59,7 @@ const selectItem = (event, img) => {
     element.classList.remove("added");
   }
 };
-var timer;
+let timer;
 const createSlider = () => {
   // check slider image length
   if (sliders.length < 2) {
@@ -63,6 +67,7 @@ const createSlider = () => {
     durationField.value = "";
     return;
   }
+  search.value = "";
 
   const duration = durationField.value || 1000;
 
@@ -93,6 +98,14 @@ const createSlider = () => {
     src="${slide}"
     alt="">`;
     sliderContainer.appendChild(item);
+  });
+
+  dot.innerHTML = "";
+  sliders.forEach((_, i) => {
+    let item = document.createElement("span");
+    item.className = "dot";
+    item.dataset.id = i;
+    dot.appendChild(item);
   });
   changeSlide(0);
   timer = setInterval(function () {
@@ -126,12 +139,16 @@ const changeSlide = (index) => {
   items[index].style.display = "block";
 };
 
-searchBtn.addEventListener("click", function () {
+const hideShow = () => {
   document.querySelector(".main").style.display = "none";
   clearInterval(timer);
   getImages(search.value);
   sliders.length = 0;
   durationField.value = "";
+};
+
+searchBtn.addEventListener("click", function () {
+  hideShow();
 });
 
 sliderBtn.addEventListener("click", function () {
@@ -140,7 +157,7 @@ sliderBtn.addEventListener("click", function () {
 
 search.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
-    getImages(search.value);
+    hideShow();
   }
 });
 
