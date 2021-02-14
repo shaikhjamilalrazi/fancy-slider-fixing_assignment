@@ -17,6 +17,7 @@ const KEY = "15674931-a9d714b6e9d654524df198e00&q";
 
 // show images
 const showImages = (images) => {
+  // added validation if no data was found
   if (images.length !== 0) {
     imagesArea.style.display = "block";
     gallery.innerHTML = "";
