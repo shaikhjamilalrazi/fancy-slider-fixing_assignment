@@ -39,6 +39,7 @@ const showImages = (images) => {
 
 const getImages = (query) => {
   toggleSpinner();
+  // added setTImeOut for showing spinner
   setTimeout(() => {
     fetch(
       `https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`
@@ -46,7 +47,7 @@ const getImages = (query) => {
       .then((response) => response.json())
       .then((data) => showImages(data.hits))
       .catch((err) => console.log(err));
-  }, 2500);
+  }, 1500);
 };
 
 let slideIndex = 0;
@@ -74,7 +75,7 @@ const createSlider = () => {
 
   const duration = durationField.value || 1000;
 
-  if (duration < 0 || isNaN(duration)) {
+  if (duration < 500 || isNaN(duration)) {
     alert("Slider duration not valid");
     durationField.value = "";
     durationField.focus();
@@ -104,7 +105,7 @@ const createSlider = () => {
     src="${slide}"
     alt="">`;
     sliderContainer.appendChild(item);
-
+    // created dynamic dots
     let itemSpan = document.createElement("span");
     itemSpan.className = "dot";
     dot.appendChild(itemSpan);
@@ -158,6 +159,7 @@ const changeSlide = (index) => {
   activeDot[index].classList.add("dot_active");
 };
 
+// hide shoe fields
 const hideShowFields = () => {
   document.querySelector(".main").style.display = "none";
   clearInterval(timer);
@@ -166,20 +168,24 @@ const hideShowFields = () => {
   durationField.value = "";
 };
 
+// getting data
 searchBtn.addEventListener("click", function () {
   hideShowFields();
 });
 
+// creating slider
 sliderBtn.addEventListener("click", function () {
   createSlider();
 });
 
+// pressing enter key
 search.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
     hideShowFields();
   }
 });
 
+// Spinner
 const toggleSpinner = () => {
   const spinner = document.querySelector("#loading-spinner");
   spinner.classList.toggle("d-flex");
