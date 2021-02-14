@@ -52,10 +52,13 @@ img {
   margin: 0 3px;
 }
 
+.dot_active {
+  background-color: #007bff;
+}
+
 .main {
   display: none;
 }
-
 .noData {
   font-size: 50px;
   margin: auto;

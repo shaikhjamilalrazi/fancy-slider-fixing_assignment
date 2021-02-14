@@ -5,13 +5,14 @@ const searchBtn = document.getElementById("search-btn");
 const sliderBtn = document.getElementById("create-slider");
 const sliderContainer = document.getElementById("sliders");
 
-const durationField = document.getElementById("duration"); // added
+const durationField = document.getElementById("duration");
 const search = document.getElementById("search");
-
 const dot = document.querySelector(".dots");
+
 // selected image
 let sliders = [];
 
+// Api Key
 const KEY = "15674931-a9d714b6e9d654524df198e00&q";
 
 // show images
@@ -72,7 +73,7 @@ const createSlider = () => {
   const duration = durationField.value || 1000;
 
   if (duration < 0 || isNaN(duration)) {
-    alert("Duration not valid");
+    alert("Slider duration not valid");
     durationField.value = "";
     durationField.focus();
     return;
@@ -91,22 +92,23 @@ const createSlider = () => {
   document.querySelector(".main").style.display = "block";
   // hide image aria
   imagesArea.style.display = "none";
-  sliders.forEach((slide) => {
+
+  dot.innerHTML = "";
+
+  sliders.forEach((slide, i) => {
     let item = document.createElement("div");
     item.className = "slider-item";
     item.innerHTML = `<img class="w-100"
     src="${slide}"
     alt="">`;
     sliderContainer.appendChild(item);
+
+    let itemSpan = document.createElement("span");
+    itemSpan.className = "dot";
+    itemSpan.dataset.id = i;
+    dot.appendChild(itemSpan);
   });
 
-  dot.innerHTML = "";
-  sliders.forEach((_, i) => {
-    let item = document.createElement("span");
-    item.className = "dot";
-    item.dataset.id = i;
-    dot.appendChild(item);
-  });
   changeSlide(0);
   timer = setInterval(function () {
     slideIndex++;
@@ -122,8 +124,14 @@ const changeItem = (index) => {
 // change slide item
 const changeSlide = (index) => {
   const items = document.querySelectorAll(".slider-item");
+  const activeDot = document.querySelectorAll(".dot");
   if (index < 0) {
     slideIndex = items.length - 1;
+    index = slideIndex;
+  }
+
+  if (index < 0) {
+    slideIndex = activeDot.length - 1;
     index = slideIndex;
   }
 
@@ -132,14 +140,24 @@ const changeSlide = (index) => {
     slideIndex = 0;
   }
 
+  if (index >= activeDot.length) {
+    index = 0;
+    slideIndex = 0;
+  }
+
   items.forEach((item) => {
     item.style.display = "none";
   });
 
+  activeDot.forEach((item) => {
+    item.classList = "dot";
+  });
+
   items[index].style.display = "block";
+  activeDot[index].classList.add("dot_active");
 };
 
-const hideShow = () => {
+const hideShowFields = () => {
   document.querySelector(".main").style.display = "none";
   clearInterval(timer);
   getImages(search.value);
@@ -148,7 +166,7 @@ const hideShow = () => {
 };
 
 searchBtn.addEventListener("click", function () {
-  hideShow();
+  hideShowFields();
 });
 
 sliderBtn.addEventListener("click", function () {
@@ -157,7 +175,7 @@ sliderBtn.addEventListener("click", function () {
 
 search.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
-    hideShow();
+    hideShowFields();
   }
 });
 
