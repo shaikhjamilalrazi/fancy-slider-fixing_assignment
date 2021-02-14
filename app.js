@@ -39,12 +39,14 @@ const showImages = (images) => {
 
 const getImages = (query) => {
   toggleSpinner();
-  fetch(
-    `https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`
-  )
-    .then((response) => response.json())
-    .then((data) => showImages(data.hits))
-    .catch((err) => console.log(err));
+  setTimeout(() => {
+    fetch(
+      `https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`
+    )
+      .then((response) => response.json())
+      .then((data) => showImages(data.hits))
+      .catch((err) => console.log(err));
+  }, 2500);
 };
 
 let slideIndex = 0;
@@ -105,7 +107,6 @@ const createSlider = () => {
 
     let itemSpan = document.createElement("span");
     itemSpan.className = "dot";
-    itemSpan.dataset.id = i;
     dot.appendChild(itemSpan);
   });
 
